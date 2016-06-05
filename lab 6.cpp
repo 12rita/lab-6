@@ -1,7 +1,14 @@
 // lab 6.cpp: определяет точку входа для консольного приложения.
 //
 
-#include "stdafx.h"
+	
+#include <string> 
+#include <stdlib.h> 
+#include <iostream> 
+#include <sstream> 
+#include <iomanip> 
+#include <conio.h> 
+#include <time.h>
 using namespace std;
 
 const int modul = 100;
