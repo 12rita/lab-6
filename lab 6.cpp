@@ -9,6 +9,7 @@
 #include <iomanip> 
 #include <conio.h> 
 #include <time.h>
+#include <algorithm>
 using namespace std;
 
 const int modul = 100;
@@ -152,14 +153,20 @@ public:
 		}
 		return q;
 	}
-	class itterator
+	class iterator
 	{
 	private:
 		t** m;
 		int stroki, stolbcu;
 	public:
-		itterator(t** a, int b, int c) : m(a), stroki(b),stolbcu(c) {}
-		itterator& operator++()
+		typedef ptrdiff_t difference_type;
+		typedef t value_type;
+		typedef t* pointer;
+		typedef t& reference;
+		typedef unsigned sizet_type;
+		typedef std::forward_iterator_tag iterator_category;
+		iterator(t** a, int b, int c) : m(a), stroki(b),stolbcu(c) {}
+		iterator& operator++()
 		{
 			stolbcu += 1;
 			if (stolbcu == s2)
@@ -177,21 +184,26 @@ public:
 		{
 			return &(m[stroki][stolbcu]);
 		}
-		friend bool operator!=(itterator& q, itterator& w) 
+		friend bool operator!=(iterator& q, iterator& w) 
+		{
+		
+			return &(*q) != &(*w);
+		}
+		friend bool operator==(iterator& q, iterator& w)
 		{
 			
 			return &(*q) != &(*w);
 		}
 	};
-	itterator begin()
+	iterator begin()
 	{
-		return itterator(a, 0, 0);
+		return iterator(a, 0, 0);
 	}
-	itterator end()
+	iterator end()
 	{
-		return itterator(a, s1, 0);
+		return iterator(a, s1, 0);
 	}
-	
+
 	template<typename t, int s1, int s2>
 	friend ostream& operator << (ostream& out, matrix<t, s1, s2> const& a);
 	template<typename t, int s1, int s2>
@@ -216,7 +228,9 @@ template<typename t, int s1, int s2>
 istream& operator >> (istream& in, matrix<t, s1, s2>& a)
 {
 	string el;
-
+	//in >> el;
+	//stringstream ss;
+	//ss << el;	
 	for (int i = 0;i < s1; i++)
 	{
 		for (int j = 0;j < s2; j++)
@@ -228,6 +242,24 @@ istream& operator >> (istream& in, matrix<t, s1, s2>& a)
 		}
 	}
 	return in;
+}
+
+
+
+bool les(element& a)
+{
+	return (a < 30);
+}
+
+bool kx(element& a)
+{
+	return ((2 * a + (-4)) == 0);
+}
+
+void pl(element& a)
+{
+	a = a + 4;
+	return;
 }
 
 int main()
@@ -259,41 +291,25 @@ int main()
 	}
 	cout << endl;
 
-	int h;
-	cin >> h;
-	for (auto i = b.begin();i != b.end();++i)
-	{
-		*i = *i + h;
-	}
+	
+	int l;
+	for_each(b.begin(), b.end(), pl);//+4
 	cout << b;
 
-	int l=0;
-	cin>>h;
-	for (auto i = b.begin();i != b.end();++i)
-	{
-		if (*i == h)
-			l++;
-	}
-	cout << l << endl;
+	l = count(b.begin(), b.end(), 30);
+	cout << l << ' ';
 
-	l = 0;
-	cin >> h;
-	for (auto i = b.begin();i != b.end();++i)
-	{
-		if (*i < h)
-			l++;
-	}
-	cout << l << endl<<"vvedite: kx+b=0"<<endl;
+	l = count_if(b.begin(), b.end(), kx);
+	cout << l << ' ';
 
-	cin >> h >> l;
-	float d = (-l / h);
-	l = 0;
-	for (auto i = b.begin();i != b.end();++i)
-	{
-		if (*i == d)
-			l++;
-	}
-	cout << l << endl;
+	l = count_if(b.begin(), b.end(), les);
+	cout << l << ' ';
+
+	auto n = find(b.begin(), b.end(), 20);
+	if(n!=b.end())
+		cout << "est " << *n;
+	else cout << "net";
+
 	system("pause");
 	return 0;
 }
